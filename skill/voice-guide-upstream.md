@@ -1,72 +1,42 @@
 # Voice guide, the upstream section: how I talk to maintainers
 
-<!--
-THIS IS THE PART YOU WRITE (the unit-6 hole). Append everything below
-this comment to YOUR voice guide, then fill it. Your guide has held
-your outgoing words to your own rules since unit 2; this section aims
-those rules at the wild, where the readers are maintainer strangers
-who owe you nothing and your house rules do not travel.
-
-Same format as unit 2, on purpose: each rule needs a wrong/right pair
-from your own hand. One line you might actually have written that
-breaks the rule, and the line you would post instead. The pair is
-what makes a rule executable; a rule without one is a wish. "Be
-polite" is advice for everyone and therefore a rule for no one.
-
-Three subsections. Fill all three: your claims, your questions, your
-pings each leave your keyboard under your name. Once your rules are
-written, delete these instruction comments: the guide of record
-carries rules, not scaffolding.
--->
-
 ## Upstream: how I talk to maintainers
 
 ### Claims I post
 
-<!-- 1-2 rules. What your claim promises and how it sounds: intent,
-a concrete first step, a realistic timeframe, in your register. Think
-about what you refuse to do too: claiming over a stranger, squatting
-silently, promising dates you cannot keep.
+#### Rule: Name your first step and commit to a timeline
 
-#### Rule: <short name>
+A claim is not "I'll work on this." It's "Here's what I'm doing first, and here's when I'll report back."
 
-<The rule, one or two sentences.>
+- Wrong: "I'm interested in this issue. I'll start working on it soon."
+- Right: "I'm claiming this issue. I've already reproduced it locally. My first step is to trace the asyncio.run loop lifecycle and identify where lru_cache is keeping the engine alive. I'll report back by Friday with my findings and a proposed fix approach."
 
-- Wrong: "<a line that breaks it>"
-- Right: "<the line to post instead>"
--->
+#### Rule: Prove you understand the issue before you claim it
+
+Post reproduction evidence in your claim. Show you've done the work.
+
+- Wrong: "I'm claiming this. I haven't reproduced it yet but the fix should be straightforward."
+- Right: "I reproduced this with `menagerist --db local:// --query test`. I got RuntimeError: Event loop is closed on the second database command. Here's the traceback: [pasted output]. I understand the issue: asyncio.run creates a new loop each time, but lru_cache keeps the database engine from a previous loop alive."
 
 ### Questions I ask
 
-<!-- 1-2 rules. What a question of yours must carry before it goes
-up: answerable from the maintainer's chair, what you already tried,
-one question rather than five. -->
+#### Rule: Show your work before asking
+
+Before you ask a maintainer something, say what you already checked and why you're stuck.
+
+- Wrong: "How should I fix this?"
+- Right: "I've traced the issue to the engine being cached across asyncio.run calls. I see two possible fixes: (1) clear the lru_cache before each run, or (2) make the engine async-aware. I read [issue #XXX] which suggests approach 2 might be preferred. Should I explore that direction, or is approach 1 simpler for this case?"
+
+#### Rule: Ask one question, not a pile
+
+- Wrong: "What should I do? Do I need to write tests? Where should they go? What format? Should I update the docs too?"
+- Right: "I'm ready to write a fix. Should I add tests in tests/unit/test_database.py following the existing pattern, or is there a different test file you prefer for asyncio-related tests?"
 
 ### Pings I send
 
-<!-- 1 rule is enough. When you nudge and how it sounds: measured
-against the repo's own reply rhythm, never your clock, and never
-pressure dressed as politeness. -->
+#### Rule: Ping only when you're stuck and they're the only one who can help
 
-<!--
-NO UNIT 2 GUIDE? The frame carries you. Write ALL the sections fresh
-in your canonical guide, today: first the three unit 2 sections
-listed below, then the Upstream section above. Write every rule as
-plain text, outside these comment blocks. It is more writing, and it is
-entirely doable; ask a TF if you want a second pair of eyes on your
-first rules.
+Match the repo's rhythm. If the maintainer replies within hours, ping after a day. If they take a week, give them two weeks.
 
-The unit-2 frame, so you do not need the old materials open:
-
-  ## Who I am in threads
-    2-3 lines. Who is talking when you comment: your experience level
-    stated plainly, what you are doing in this repo, what readers can
-    expect from you.
-
-  ## Rules I write by
-    3-5 rules, wrong/right pair each, same format as above.
-
-  ## Things I never post
-    A short list. Promises you cannot keep, tones you refuse,
-    shortcuts you know you reach for when tired.
--->
+- Wrong: "@samcorky can you review my work?" (posted 2 hours after your previous message)
+- Right: "@samcorky I've been working on this since Tuesday and traced it to [specific issue]. I'm at a decision point [explain]. When you have a moment, would you clarify which approach you'd prefer?" (posted after giving them a full work day to respond to your previous message)
