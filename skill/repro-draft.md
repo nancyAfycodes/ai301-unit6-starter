@@ -4,13 +4,13 @@
 
 - Browser: Chrome 131.0.6778.86
 - OS: Windows 11
-- Extension version: Latest from repo
+- Extension version:    master at PR #4446 merge (2026-11-04)
 - Date: 2026-11-08
 
 ## Steps to Reproduce
 
-1. Clone the repository: `git clone https://github.com/<your-fork>/youtube.git`
-2. Load the extension in Chrome: Follow the steps in walkthrough.md (load unpacked from repo root)
+1. Clone the repository: `git clone https://github.com/code-charity/youtube.git`
+2. Load the extension in Chrome: Go to chrome://extensions → Enable Developer mode → Load unpacked → select repo root
 3. Navigate to YouTube home feed
 4. Find a playlist tile (e.g., "My Mix" or "Podcasts")
 5. Click the block button on a playlist tile
@@ -30,7 +30,7 @@ There is no "Playlists" option.
 
 When I clicked the block button on a "My Mix" playlist tile, it blocked that single video, not the entire "My Mix" playlist. The next time I refreshed the home feed, other videos from "My Mix" still appeared.
 
-The content script (js&css/web-accessible/www.youtube.com/blocklist.js, line 12) only processes nodes with a video ID: `if (!video) return;`. Playlist items don't have video IDs in the same way, so they bypass the blocking logic. The storage object structure has `blocklist.channels` and `blocklist.videos`, but no `blocklist.playlists` field to store playlist blocks.
+The content script (js&css/web-accessible/www.youtube.com/blocklist.js, line 12) only processes nodes with a video ID: `if (!video) return;`.Mix tiles link to watch?v=...&list=RD..., so the tile is matched by its first video’s ID, not the playlist ID. Blocking stores the video, not the list. The storage object structure has `blocklist.channels` and `blocklist.videos`, but no `blocklist.playlists` field to store playlist blocks.
 
 ## Desired Behavior
 
